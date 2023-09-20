@@ -1,0 +1,37 @@
+{
+  "name": "gpi-extention-deployments",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "copy-docs": "rsync -av 'Docs beta/' Docs/ --exclude='.clasp.json' --exclude='appsscript.json'",
+    "copy-docs-reverse": "rsync -av Docs/ 'Docs beta/' --exclude='.clasp.json' --exclude='appsscript.json'",
+    "copy-sheets": "rsync -av 'Sheets beta/' Sheets/ --exclude='.clasp.json' --exclude='appsscript.json'",
+    "copy-sheets-reverse": "rsync -av Sheets/ 'Sheets beta/' --exclude='.clasp.json' --exclude='appsscript.json'",
+    "copy-sheets-idems": "rsync -av 'Sheets beta/' idems/Sheets/ --exclude='.clasp.json' --exclude='appsscript.json'",
+    "copy-sheets-innodems": "rsync -av 'Sheets beta/' innodems/Sheets/ --exclude='.clasp.json' --exclude='appsscript.json'",
+    "clasp-pull-docs": "cd Docs && clasp pull",
+    "clasp-pull-sheets": "cd Sheets && clasp pull",
+    "clasp-pull-docs-beta": "cd 'Docs beta' && clasp pull",
+    "clasp-pull-sheets-beta": "cd 'Sheets beta' && clasp pull",
+    "clasp-push-docs": "cd Docs && clasp push",
+    "clasp-push-sheets": "cd Sheets && clasp push",
+    "clasp-push-docs-beta": "cd 'Docs beta' && clasp push",
+    "clasp-push-sheets-beta": "cd 'Sheets beta' && clasp push",
+    "clasp-push-sheets-idems": "cd idems/Sheets && clasp push",
+    "clasp-push-sheets-innodems": "cd innodems/Sheets && clasp push",
+    "clasp-deploy-docs": "cd Docs && clasp deploy",
+    "clasp-deploy-sheets": "cd Sheets && clasp deploy",
+    "clasp-deploy-docs-beta": "cd 'Docs beta' && clasp deploy",
+    "clasp-deploy-sheets-beta": "cd 'Sheets beta' && clasp deploy",
+    "clasp-deploy-sheets-idems": "cd idems/Sheets && clasp deploy",
+    "clasp-deploy-sheets-innodems": "cd innodems/Sheets && clasp deploy",
+    "clasp-pull-all": "npm run clasp-pull-docs && npm run clasp-pull-sheets && npm run clasp-pull-docs-beta && npm run clasp-pull-sheets-beta"
+  },
+  "author": "Umar Abdullah",
+  "license": "ISC",
+  "dependencies": {
+    "cpy": "^10.1.0"
+  }
+}

@@ -1,0 +1,26 @@
+Sidekick sheets beta:
+https://docs.google.com/spreadsheets/d/1WSji5BQR6yQ9puPZO2UUB5OKhJcJdkkxoKilnBfO2Og/edit#gid=593716061
+https://script.google.com/u/0/home/projects/1wozC7FkFFj1DXJKuFxWO2oRT1x9fOe331dFxvWFaI8JJh4Ilvd5eEAUc/edit
+https://console.cloud.google.com/apis/api/appsmarket-component.googleapis.com/googleapps_sdk?project=gpi-sidekick-sheets
+
+Sidekick docs beta:
+https://docs.google.com/document/d/1u1f13WjjXI2-ayCCqEb8IBisUnvihrxEam66mFt-85U/edit#
+https://script.google.com/home/projects/180LwBELruXoj9MvZ3UyW63m8DhIcv4-1E9VHGj1MXaL0eOdU8wgmw3bf/edit
+https://console.cloud.google.com/apis/api/appsmarket-component.googleapis.com/googleapps_sdk?project=gpi-sidekick-docs
+
+Sidekick docs:
+https://docs.google.com/document/d/12W_eiV0Ldy2Tq7WXXMK6HJ19uHnjqD-Ldhi_GzqK9h0/edit
+https://script.google.com/home/projects/13qM0WKZC0T3R1cgGgXpRdYx1-M5PUFO7waFC0cJGSCPzGEB22ewlyg54/edit
+https://console.cloud.google.com/apis/api/appsmarket-component.googleapis.com/googleapps_sdk_publish?project=gpi-sidekick-for-docs
+https://console.cloud.google.com/apis/credentials/consent?project=gpi-sidekick-for-docs
+
+Sidekick Sheets:
+https://docs.google.com/spreadsheets/d/1DlKTYFXuiLhnJz3qkYxNCBDvdO3uDQ4ecFaFgBHmqio/edit#gid=1619684387
+https://script.google.com/home/projects/1mFABc8RJ2M7YEpxmWfAwzqECQWStzNPdHwuRZ7ScYVQAY3tWG6XTDYfi/edit
+https://console.cloud.google.com/apis/api/appsmarket-component.googleapis.com/googleapps_sdk_publish?project=gpi-sidekick-for-sheets
+https://console.cloud.google.com/apis/credentials/consent?project=gpi-sidekick-for-sheets
+
+Sidekick beta:
+https://docs.google.com/spreadsheets/d/1v1p-NKJtZeSoTP18XJPrDAlj69YSRAQDehNR9WwAPzs/edit#gid=0
+https://script.google.com/home/projects/1IZZe2PGqXh5407N8qBvR3kjSqr3IyLsSzRPSeCJZPKueTIf_vqcqHj4a/settings
+https://console.cloud.google.com/apis/api/appsmarket-component.googleapis.com/googleapps_sdk?project=gpi-sidekick-beta-new

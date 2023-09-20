@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+
+      body {
+        font-family: "Roboto", Arial, sans-serif;
+        margin: 20px;
+        background-color: #f5f3fc;
+      }
+
+      h2 {
+        color: #6c63ff;
+        margin-bottom: 20px;
+      }
+
+      p {
+        margin-bottom: 5px;
+      }
+
+      input[type="text"],
+      select {
+        width: 260px;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      button {
+        padding: 10px 20px;
+        background-color: #6c63ff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #5a51d8;
+      }
+
+      #success-or-error-message {
+        margin-top: 10px;
+        font-weight: bold;
+        color: #6c63ff;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h2>Create pull request from a google drive folder</h2>
+
+    <p style="margin-bottom: 0.5rem">Enter Branch Name</p>
+    <input type="text" placeholder="Branch name" id="branch-input" />
+
+    <p style="margin-bottom: 0.5rem">Enter Pull Request Title</p>
+    <input
+      type="text"
+      placeholder="Pull request title"
+      id="pull-request-title"
+    />
+
+    <p style="margin-bottom: 0.5rem">Select folder to create pull request</p>
+    <select id="folders-select" style="max-width: 260px">
+      <option value="">Fetching folders...</option>
+    </select>
+    <br /><br />
+    <button id="submit" onclick="createPullRequest()">
+      Create Pull Request
+    </button>
+    <p id="success-or-error-message"></p>
+
+    <p>
+      You can see all created pull requests
+      <a
+        href="https://github.com/umarabdullah23/test-repo/pulls"
+        target="_blank"
+        >here</a
+      >
+    </p>
+
+    <script type="module">
+      import { Octokit } from "https://cdn.skypack.dev/@octokit/rest";
+
+      import { createPullRequest } from "https://cdn.pika.dev/octokit-plugin-create-pull-request";
+      window.Octokit = Octokit;
+      import {
+        createOrUpdateTextFile,
+        composeCreateOrUpdateTextFile,
+      } from "https://cdn.pika.dev/@octokit/plugin-create-or-update-text-file";
+      window.createOrUpdateTextFile = createOrUpdateTextFile;
+    </script>
+
+    <script>
+      google.script.run
+        .withSuccessHandler(updateSelectOptions)
+        .getFolderOptions();
+
+      function updateSelectOptions(options) {
+        document.getElementById("folders-select").innerHTML = options;
+      }
+
+      function getFolderContent(content) {
+        createPullRequestOfContent(content);
+      }
+
+      function areAllFieldsFilled() {
+        const folderId = document.getElementById("folders-select").value;
+        const newBranch = document.getElementById("branch-input").value;
+        const pullRequestTitle =
+          document.getElementById("pull-request-title").value;
+
+        if (folderId && newBranch && pullRequestTitle) return true;
+        return false;
+      }
+
+      function createPullRequest() {
+        if (!areAllFieldsFilled()) {
+          setSuccessOrErrorMessage("All feilds are required", "error");
+          return;
+        }
+
+        var folderId = document.getElementById("folders-select").value;
+        google.script.run
+          .withSuccessHandler(getFolderContent)
+          .createPullRequest(folderId);
+      }
+
+      function setSuccessOrErrorMessage(message, type = "success") {
+        const element = document.getElementById("success-or-error-message");
+        element.textContent = message;
+        element.style.color = type === "success" ? "black" : "red";
+      }
+
+      async function createPullRequestOfContent(fileContent) {
+        setSuccessOrErrorMessage("Creating pull request...");
+
+        const TOKEN = "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"; // create token at https://github.com/settings/tokens/new?scopes=repo
+
+        const MyOctokit = Octokit.plugin(createOrUpdateTextFile);
+
+        const customOctokit = new MyOctokit({
+          auth: TOKEN,
+        });
+
+        const branchName = "main";
+        const newBranch = document.getElementById("branch-input").value;
+        const pullRequestTitle =
+          document.getElementById("pull-request-title").value;
+
+        const data = await customOctokit.git.getRef({
+          owner: "umarabdullah2023",
+          repo: "test-repo",
+          ref: `heads/${branchName}`,
+        });
+
+        const baseCommitSha = data?.data?.object?.sha;
+
+        const octokit = new Octokit({
+          auth: TOKEN,
+        });
+
+        // try{
+        const tree = await Promise.all(
+          fileContent.map(async ({ folderName, fileName, content }) => {
+            const newBlob = await octokit.git.createBlob({
+              owner: "umarabdullah2023",
+              repo: "test-repo",
+              content,
+              encoding: "base64",
+            });
+
+            return {
+              path: `${folderName}/${fileName}`,
+              mode: "100644",
+              type: "blob",
+              sha: newBlob.data.sha,
+            };
+          })
+        );
+        // }
+        // catch(err){
+        //   setSuccessOrErrorMessage('There is some problem in adding the files', 'error')
+        //   return
+        // }
+
+        // try{
+        await customOctokit.git.createRef({
+          owner: "umarabdullah2023",
+          repo: "test-repo",
+          ref: `refs/heads/${newBranch}`,
+          sha: baseCommitSha,
+        });
+        // }
+        // catch(err){
+        //   setSuccessOrErrorMessage('Branch name already exists', 'error')
+        //   return
+        // }
+
+        // try{
+        const treeResponse = await octokit.rest.git.createTree({
+          owner: "umarabdullah2023",
+          repo: "test-repo",
+          base_tree: baseCommitSha,
+          tree,
+        });
+        const treeSha = treeResponse?.data?.sha;
+        // }
+        // catch(err){
+        //   setSuccessOrErrorMessage('There is some problem in adding files', 'error')
+        //   return
+        // }
+
+        // try{
+        const commit = await customOctokit.git.createCommit({
+          owner: "umarabdullah2023",
+          repo: "test-repo",
+          message: "update test.xlsx",
+          tree: treeSha,
+          parents: [baseCommitSha],
+        });
+        // }
+        // catch(err){
+        //     setSuccessOrErrorMessage('There is some problem in commiting files', 'error')
+        //     return
+        // }
+
+        // try{
+        const updatedRef = await customOctokit.git.updateRef({
+          owner: "umarabdullah2023",
+          repo: "test-repo",
+          ref: `heads/${newBranch}`,
+          sha: commit.data.sha,
+        });
+        // }
+        // catch(err){
+        //   setSuccessOrErrorMessage('There is some problem creating the commit', 'error')
+        //   return
+        // }
+
+        // try{
+        const pullRequest = await customOctokit.rest.pulls.create({
+          owner: "umarabdullah2023",
+          repo: "test-repo",
+          base: "main",
+          head: newBranch,
+          title: pullRequestTitle,
+          body: "Please pull these awesome changes in!",
+        });
+        // }
+        // catch(err){
+        //   setSuccessOrErrorMessage('There is some problem creating pull request', 'error')
+        //   return
+        // }
+
+        setSuccessOrErrorMessage("Pull request successfully created");
+      }
+    </script>
+  </body>
+</html>
